@@ -57,6 +57,19 @@ return array(
 	'copyright' 	=> 'ECJIA Copyright 2017 ~ 2019.',
     'namespace'     => 'Ecjia\App\Upgrade',
     'provider'      => 'UpgradeServiceProvider',
+    'autoload'    => array(
+        'psr-4' => array(
+            "Ecjia\\App\\Upgrade\\" => "classes/"
+        )
+    ),
+    'discover' => array(
+        'providers' => array(
+            "Ecjia\\App\\Upgrade\\UpgradeServiceProvider"
+        ),
+        'aliases' => [
+
+        ]
+    ),
 );
 
 // end
