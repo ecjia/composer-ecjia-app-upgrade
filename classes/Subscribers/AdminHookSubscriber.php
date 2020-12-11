@@ -44,10 +44,23 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\App\Upgrade\Subscribers;
 
-class admin_upgrade_hooks {
-    
+use admin_notice;
+use ecjia;
+use ecjia_admin;
+use ecjia_config;
+use ecjia_screen;
+use RC_Config;
+use RC_Hook;
+use RC_Package;
+use RC_Uri;
+use Royalcms\Component\Hook\Dispatcher;
+use upgrade_utility;
+
+class AdminHookSubscriber
+{
+
     /**
      * 修正1.3.x安装时的ecjia_version版本号
      */
@@ -59,8 +72,8 @@ class admin_upgrade_hooks {
             ecjia_config::instance()->reload_config();
         }
     }
-    
-    
+
+
     public static function upgrade_database()
     {
         // 后台超级管理员登录的情况下方可升级
@@ -76,13 +89,13 @@ class admin_upgrade_hooks {
             $old_version = ecjia::config('ecjia_version');
             $new_version = RC_Config::get('release.version');
 
-            if (! upgrade_utility::checkUpgradeLock() && ROUTE_M != 'upgrade'
+            if (!upgrade_utility::checkUpgradeLock() && ROUTE_M != 'upgrade'
                 && version_compare($old_version, $new_version, '<')) {
                 ecjia_admin::$controller->redirectWithExited(RC_Uri::url('upgrade/index/init'));
             }
 
         }
-        
+
     }
 
 
@@ -90,16 +103,28 @@ class admin_upgrade_hooks {
     {
         if (version_compare(ecjia::config('ecjia_version'), RC_Config::get('release.version'), '<')) {
             $upgrade_url = RC_Uri::url('upgrade/index/init');
-            $warning = sprintf(__('您当前已经覆盖了最新版的v%s程序，建议您立即升级数据库结构，升级前做好备份，前往<a href="%s">升级中心</a>。', 'upgrade'), RC_Config::get('release.version'), $upgrade_url);
+            $warning     = sprintf(__('您当前已经覆盖了最新版的v%s程序，建议您立即升级数据库结构，升级前做好备份，前往<a href="%s">升级中心</a>。', 'upgrade'), RC_Config::get('release.version'), $upgrade_url);
             ecjia_screen::get_current_screen()->add_admin_notice(new admin_notice($warning));
         }
     }
-    
+
+
+    /**
+     * Register the listeners for the subscriber.
+     *
+     * @param \Royalcms\Component\Hook\Dispatcher $events
+     * @return void
+     */
+    public function subscribe(Dispatcher $events)
+    {
+
+        RC_Hook::add_action('ecjia_admin_finish_launching', array('admin_upgrade_hooks', 'fixed_version_number'), 1);
+        RC_Hook::add_action('ecjia_admin_finish_launching', array('admin_upgrade_hooks', 'upgrade_database'), 11);
+
+        RC_Hook::add_action('ecjia_admin_dashboard_index', array('admin_upgrade_hooks', 'display_upgrade_local_version_checked'));
+
+    }
+
 }
-
-RC_Hook::add_action( 'ecjia_admin_finish_launching', array('admin_upgrade_hooks', 'fixed_version_number'), 1 );
-RC_Hook::add_action( 'ecjia_admin_finish_launching', array('admin_upgrade_hooks', 'upgrade_database'), 11 );
-
-RC_Hook::add_action( 'ecjia_admin_dashboard_index', array('admin_upgrade_hooks', 'display_upgrade_local_version_checked') );
 
 // end
