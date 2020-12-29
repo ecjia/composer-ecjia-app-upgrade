@@ -48,6 +48,7 @@ namespace Ecjia\App\Upgrade\Subscribers;
 
 use admin_notice;
 use ecjia;
+use Ecjia\App\Upgrade\UpgradeUtility;
 use ecjia_admin;
 use ecjia_config;
 use ecjia_screen;
@@ -56,7 +57,6 @@ use RC_Hook;
 use RC_Package;
 use RC_Uri;
 use Royalcms\Component\Hook\Dispatcher;
-use upgrade_utility;
 
 class AdminHookSubscriber
 {
@@ -89,7 +89,7 @@ class AdminHookSubscriber
             $old_version = ecjia::config('ecjia_version');
             $new_version = RC_Config::get('release.version');
 
-            if (!upgrade_utility::checkUpgradeLock() && ROUTE_M != 'upgrade'
+            if (!UpgradeUtility::checkUpgradeLock() && ROUTE_M != 'upgrade'
                 && version_compare($old_version, $new_version, '<')) {
                 ecjia_admin::$controller->redirectWithExited(RC_Uri::url('upgrade/index/init'));
             }
