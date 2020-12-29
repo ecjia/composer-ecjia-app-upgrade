@@ -15,17 +15,19 @@
 	                    <div class="p message notice">
                             {t domain="upgrade"  escape=no}<a target="_blank" href="https://ecjia.com/wiki/%E5%B8%AE%E5%8A%A9:ECJia%E5%88%B0%E5%AE%B6">前往ECJIA WIKI，查看帮助文档，使您快速上手。</a>{/t}
 	                    </div>
-	
+
+                        {if !empty($go_urls)}
 	                    <div class="session">
 	                    <p>{t domain="upgrade"}您可以将下面链接保存到您的收藏夹哦{/t}</p>
-	                    <ul>  
-	                    	<li><a target="_blank" href="{$index_url}">{t domain="upgrade"}点击这里进入ECJIA到家首页{/t}</a></li>
-	                    	<li><a target="_blank" href="{$h5_url}">{t domain="upgrade"}点击这里进入ECJIA到家H5端{/t}</a></li>
-	                    	<li><a target="_blank" href="{$admin_url}">{t domain="upgrade"}点击这里进入ECJIA到家平台后台{/t}</a></li>
-	                        <li><a target="_blank" href="{$merchant_url}">{t domain="upgrade"}点击这里进入ECJIA到家商家后台{/t}</a></li>
+	                    <ul>
+                            <!-- {foreach from=$go_urls item=url key=key} -->
+                            <li><a target="_blank" href="{$url.link}">{$url.text}</a></li>
+                            <!-- {/foreach} -->
 	                    </ul>
 	                    </div>
-	                    <p>{t domain="upgrade"}各种体验，希望您能尽情享用ECJIA到家带来的乐趣！{/t}</p>
+                        {/if}
+
+	                    <p>{t domain="upgrade"}各种体验，希望您能尽情享用ECJIA带来的乐趣！{/t}</p>
 	                </div>
 				</div>
 			</div>

@@ -15,7 +15,7 @@
 					<form method="post" name="check_form" id="js_ecjia_intro">
                         <div class="ecjia-install-body">
                             {t domain="installer" escape=no}<h5>
-                                欢迎使用ECJia到家新零售商城系统，之前正在运行的版本是<span style="text-decoration:underline;font-size:16px;">v{$version_current}</span>，现在您已经覆盖了最新的升级包程序，
+                                欢迎使用ECJia新零售商城系统，之前正在运行的版本是<span style="text-decoration:underline;font-size:16px;">v{$version_current}</span>，现在您已经覆盖了最新的升级包程序，
                                 请确保升级完成，以免造成意外的错误。
                             </h5>
                             <h4 class="btn-ghost">最新版本：v{$version_last}</h4>
@@ -29,7 +29,7 @@
                             <p>
                                 1. 本升级程序只适合官方发布的未经过修改的版本间升级，不适用于开发修改过的程序。<br />
                                 2. 升级前请备份好相关数据和文件，以免出现数据丢失等意外情况。<br />
-                                3. 模板堂不对升级ECJia到家系统过程中造成的数据丢失和其他损坏承担责任，继续升级则表示您同意此协议。<br />
+                                3. 模板堂不对升级ECJia系统过程中造成的数据丢失和其他损坏承担责任，继续升级则表示您同意此协议。<br />
                                 4. 文件变动中含有“D”标识的表示删除，如是覆盖新版本，请确保这些文件已被手动移除，以免造成无法预料错误。<br />
                             </p>
                             <br>
