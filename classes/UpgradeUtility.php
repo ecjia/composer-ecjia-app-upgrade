@@ -46,6 +46,8 @@
 //
 namespace Ecjia\App\Upgrade;
 
+use ecjia_update_cache;
+use RC_Uri;
 use Royalcms\Component\Database\QueryException;
 use ecjia_error;
 use ecjia_config;
@@ -86,7 +88,41 @@ class UpgradeUtility
         $path = storage_path() . '/data/upgrade.lock';
         return RC_File::exists($path);
     }
-    
+
+    /**
+     * 升级完成去往地址
+     */
+    public static function goUrls()
+    {
+        $go_urls = [
+            'index_url'    => [
+                'text' => __('点击这里进入ECJIA首页', 'installer'),
+                'link' => RC_Uri::home_url(),
+            ],
+            'admin_url'    => [
+                'text' => __('点击这里进入ECJIA平台后台', 'installer'),
+                'link' => RC_Uri::home_url() . '/sites/admincp/',
+            ],
+            'merchant_url' => [
+                'text' => __('点击这里进入ECJIA商家后台', 'installer'),
+                'link' => RC_Uri::home_url() . '/sites/merchant/',
+            ],
+        ];
+
+        return $go_urls;
+    }
+
+    /**
+     * 清除缓存
+     */
+    public static function clearCache()
+    {
+        ecjia_update_cache::clean('system_app_cache');
+        ecjia_update_cache::clean('system_userdata_cache');
+        ecjia_update_cache::clean('front_template_cache');
+    }
+
+
 }
 
 // end
