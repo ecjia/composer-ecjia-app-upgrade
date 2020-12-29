@@ -1,5 +1,4 @@
 <?php defined('IN_ECJIA') or exit('No permission resources.');?>
-{nocache}
 <!DOCTYPE html>
 <html>
 <head lang="zh-CN">
@@ -18,4 +17,3 @@
     {block name="footer"}{/block}
 </body>
 </html>
-{/nocache}
