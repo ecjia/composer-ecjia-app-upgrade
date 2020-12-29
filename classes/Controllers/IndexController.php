@@ -55,7 +55,6 @@ use RC_Event;
 use Ecjia_VersionManager;
 use ecjia;
 use PDOException;
-use ecjia_update_cache;
 
 class IndexController extends BaseControllerAbstract
 {
@@ -80,14 +79,8 @@ class IndexController extends BaseControllerAbstract
         // 获取最新版本
         $version_last = VersionUtility::getLatestVersion();
 
-        if ($version_current == $version_last) {
-            return $this->redirect(RC_Uri::url('upgrade/index/upgraded'));
-        }
-
         // 清除缓存
-        ecjia_update_cache::make()->clean('system_app_cache');
-        ecjia_update_cache::make()->clean('system_userdata_cache');
-        ecjia_update_cache::make()->clean('front_template_cache');
+        UpgradeUtility::clearCache();
 
         // 获取两个版本之前的可用升级版本
         $version_list = VersionUtility::getUpgradeVersionList($version_current, $version_last);
@@ -114,9 +107,8 @@ class IndexController extends BaseControllerAbstract
         $this->assign('error_img', RC_App::apps_url('statics/front/images/error.png', $this->__FILE__));
 
         $this->assign('step', 1);
-        return $this->display(
-            RC_Package::package('app::upgrade')->loadTemplate('front/intro.dwt', true)
-        );
+
+        return $this->displayAppTemplate('upgrade', 'front/intro.dwt');
     }
 
     public function ajax_change_files()
@@ -142,14 +134,14 @@ class IndexController extends BaseControllerAbstract
             return $this->showmessage(__('版本号错误', 'upgrade'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
-        RC_Event::listen('upgrade.after', function ($ver, $result) use ($version) {
-
-            if (is_ecjia_error($result)) {
-                return false;
-            }
-
-            UpgradeUtility::updateEcjiaVersion($version);
-        });
+//        RC_Event::listen('upgrade.after', function ($ver, $result) use ($version) {
+//
+//            if (is_ecjia_error($result)) {
+//                return false;
+//            }
+//
+//            UpgradeUtility::updateEcjiaVersion($version);
+//        });
 
         try {
             // 升级执行
@@ -167,41 +159,30 @@ class IndexController extends BaseControllerAbstract
 
     public function finish()
     {
-        if (!UpgradeUtility::checkUpgradeLock()) {
-            // 获取当前版本
-            $version_current = VersionUtility::getCurrentVersion();
-            // 获取最新版本
-            $version_last = VersionUtility::getLatestVersion();
+//        if (UpgradeUtility::checkUpgradeLock()) {
+//            return $this->redirect(RC_Uri::url('upgrade/index/upgraded'));
+//        }
 
-            if ($version_current != $version_last) {
-                return $this->redirect(RC_Uri::url('upgrade/index/init'));
-            }
+        // 获取当前版本
+        $version_current = VersionUtility::getCurrentVersion();
+        // 获取最新版本
+        $version_last = VersionUtility::getLatestVersion();
 
-            //写入升级锁定
-            UpgradeUtility::saveUpgradeLock();
-
-            $finish_message = __('恭喜您，升级成功！', 'upgrade');
-            $this->assign('finish_message', $finish_message . __('当前版本已是最新版本。', 'upgrade'));
-
-            $index_url    = RC_Uri::home_url();
-            $h5_url       = RC_Uri::home_url() . '/sites/m/';
-            $admin_url    = RC_Uri::home_url() . '/sites/admincp/';
-            $merchant_url = RC_Uri::home_url() . '/sites/merchant/';
-
-            $this->assign('index_url', $index_url);
-            $this->assign('h5_url', $h5_url);
-            $this->assign('admin_url', $admin_url);
-            $this->assign('merchant_url', $merchant_url);
-
-            $this->assign('step', 3);
-            return $this->display(
-                RC_Package::package('app::upgrade')->loadTemplate('front/finish.dwt', true)
-            );
-        } else {
-            return $this->redirect(RC_Uri::url('upgrade/index/upgraded'));
+        if ($version_current != $version_last) {
+            return $this->redirect(RC_Uri::url('upgrade/index/init'));
         }
 
+        //写入升级锁定
+        UpgradeUtility::saveUpgradeLock();
 
+        $finish_message = __('恭喜您，升级成功！', 'upgrade');
+        $this->assign('finish_message', $finish_message . __('当前版本已是最新版本。', 'upgrade'));
+
+        $this->assign('go_urls', UpgradeUtility::goUrls());
+
+        $this->assign('step', 3);
+
+        return $this->displayAppTemplate('upgrade', 'front/finish.dwt');
     }
 
     /**
@@ -209,27 +190,17 @@ class IndexController extends BaseControllerAbstract
      */
     public function upgraded()
     {
-
-        if (!UpgradeUtility::checkUpgradeLock()) {
-            return $this->redirect(RC_Uri::url('upgrade/index/init'));
-        }
+//        if (!UpgradeUtility::checkUpgradeLock()) {
+//            return $this->redirect(RC_Uri::url('upgrade/index/init'));
+//        }
 
         $this->assign('finish_message', sprintf(__('请先删除升级锁定文件 %s，方可继续升级。', 'upgrade'), '/content/storages/data/upgrade.lock'));
 
-        $index_url    = RC_Uri::home_url();
-        $h5_url       = RC_Uri::home_url() . '/sites/m/';
-        $admin_url    = RC_Uri::home_url() . '/sites/admincp/';
-        $merchant_url = RC_Uri::home_url() . '/sites/merchant/';
-
-        $this->assign('index_url', $index_url);
-        $this->assign('h5_url', $h5_url);
-        $this->assign('admin_url', $admin_url);
-        $this->assign('merchant_url', $merchant_url);
+        $this->assign('go_urls', UpgradeUtility::goUrls());
 
         $this->assign('step', 3);
-        return $this->display(
-            RC_Package::package('app::upgrade')->loadTemplate('front/finish.dwt', true)
-        );
+
+        return $this->displayAppTemplate('upgrade', 'front/finish.dwt');
     }
 
 }
