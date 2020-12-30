@@ -4,8 +4,8 @@
 namespace Ecjia\App\Upgrade\Controllers;
 
 
-use Ecjia\App\Installer\BrowserEvent\PageScriptPrint;
 use Ecjia\App\Installer\Subscribers\FrontHookSubscriber;
+use Ecjia\Component\BrowserEvent\PageScriptPrint;
 use Ecjia\System\BaseController\SimpleController;
 use RC_App;
 use RC_Hook;

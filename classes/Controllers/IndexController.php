@@ -46,7 +46,10 @@
 //
 namespace Ecjia\App\Upgrade\Controllers;
 
+use Ecjia\App\Upgrade\BrowserEvent\InstallStartEvent;
+use Ecjia\App\Upgrade\BrowserEvent\ViewVersionFileChangeEvent;
 use Ecjia\App\Upgrade\UpgradeUtility;
+use Ecjia\Component\BrowserEvent\PageEventManager;
 use Ecjia\Component\Version\VersionUtility;
 use RC_Uri;
 use RC_App;
@@ -73,6 +76,10 @@ class IndexController extends BaseControllerAbstract
         if (UpgradeUtility::checkUpgradeLock()) {
             return $this->redirect(RC_Uri::url('upgrade/index/upgraded'));
         }
+
+        $page = (new PageEventManager('init'))->addPageHandler(ViewVersionFileChangeEvent::class)
+            ->addPageHandler(InstallStartEvent::class);
+        $this->loadPageScript($page);
 
         // 获取当前版本
         $version_current = VersionUtility::getCurrentVersion();
