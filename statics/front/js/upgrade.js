@@ -52,6 +52,7 @@
 		// 	start_upgrade();
 		// },
 
+
 	};
 
 	// var lf = "<br />";
@@ -60,99 +61,88 @@
 	// var correct_img = $('input[name="correct_img"]').val();
 	// var error_img = $('input[name="error_img"]').val();
 	
-	var count = ver_list.length;
+	// var count = ver_list.length;
 
-	function progress(val) {
-		var html;
-		if (val == 100) {
-			html = js_lang.installation_complete
-		} else {
-			html = val + '%';
-		}
-		$('.progress-bar').css('width', val + '%');
-		$('.progress-bar').html(html);
-	}
+	// function progress(val) {
+	// 	var html;
+	// 	if (val == 100) {
+	// 		html = js_lang.installation_complete
+	// 	} else {
+	// 		html = val + '%';
+	// 	}
+	// 	$('.progress-bar').css('width', val + '%');
+	// 	$('.progress-bar').html(html);
+	// }
 	
-	function start_upgrade() {
-		$('body').scrollTop(0).css('height', '100%');
-		$('#js_ecjia_intro').css('display', 'none');
-		$('.path').children('li').removeClass('current').eq(1).addClass('current');
+	// function start_upgrade() {
+	// 	$('body').scrollTop(0).css('height', '100%');
+	// 	$('#js_ecjia_intro').css('display', 'none');
+	// 	$('.path').children('li').removeClass('current').eq(1).addClass('current');
+    //
+	// 	progress(10);
+	// 	upgrade();
+	// 	return false;
+	// }
 
-		progress(10);
-		upgrade();
-		return false;
-	}
-
-	//安装程序
-	function upgrade() {
-		$("#js-monitor").css('display', 'block');
-		$('#js-monitor-notice').css('display', 'block');
-
-		each_upgrade(ver_list, upgrade_post);
-	}
+	// //安装程序
+	// function upgrade() {
+	// 	$("#js-monitor").css('display', 'block');
+	// 	$('#js-monitor-notice').css('display', 'block');
+    //
+	// 	each_upgrade(ver_list, upgrade_post);
+	// }
 	
-	function each_upgrade(list, callback) {
-		if (ver_list.length > 0) {
-			$ver = list[0];
-			callback($ver);
-		}
-		if (list.length == 0) {
-			var url = $('input[name="done"]').val();
-			window.setTimeout(function() {
-				location.href = url;
-			}, 1500);
-		}
-	}
+
 	
-	function upgrade_post(version) {
-		var params = "v=" + version;
-		var url = $(".ajax_upgrade_url").val();
-		
-		$.post(url, params, function(result) {
-			if (result.state == 'error') {
-				var msg = js_lang.upgrading + version;
-				ErrorMsg(msg, result.message);
-				return false;
-			} 
-			if (result.state == 'success') {
-				var msg = '<div class="install_notice">'+ js_lang.upgrading + version + '</div>';
-				SuccessMsg(msg);
-				ver_list.shift();
-				progress_step = parseInt((count - ver_list.length) / count * 100);
-				progress(progress_step);
-				each_upgrade(ver_list, upgrade_post);
-			}
-			if (typeof(result.state) == 'undefined') {
-				var msg = js_lang.upgrading + version;
-				ErrorMsg(msg, 0);
-			}
-		});
-	}
+	// function upgrade_post(version) {
+	// 	var params = "v=" + version;
+	// 	var url = $(".ajax_upgrade_url").val();
+    //
+	// 	$.post(url, params, function(result) {
+	// 		if (result.state == 'error') {
+	// 			var msg = js_lang.upgrading + version;
+	// 			ErrorMsg(msg, result.message);
+	// 			return false;
+	// 		}
+	// 		if (result.state == 'success') {
+	// 			var msg = '<div class="install_notice">'+ js_lang.upgrading + version + '</div>';
+	// 			SuccessMsg(msg);
+	// 			ver_list.shift();
+	// 			progress_step = parseInt((count - ver_list.length) / count * 100);
+	// 			progress(progress_step);
+	// 			each_upgrade(ver_list, upgrade_post);
+	// 		}
+	// 		if (typeof(result.state) == 'undefined') {
+	// 			var msg = js_lang.upgrading + version;
+	// 			ErrorMsg(msg, 0);
+	// 		}
+	// 	});
+	// }
 
-	//提示程序安装终止信息
-	function stopNotice() {
-		$("#js-monitor-wait-please").html(js_lang.installation_aborted);
-	}
+	// //提示程序安装终止信息
+	// function stopNotice() {
+	// 	$("#js-monitor-wait-please").html(js_lang.installation_aborted);
+	// }
 
-	//显示完成（成功）信息
-	function SuccessMsg($msg) {
-		$msg += "<span class='install_correct'><img src=" + correct_img + ">"+ js_lang.success +"</span>" + lf;
-		$('#js-notice').append($msg);
-	}
+	// //显示完成（成功）信息
+	// function SuccessMsg($msg) {
+	// 	$msg += "<span class='install_correct'><img src=" + correct_img + ">"+ js_lang.success +"</span>" + lf;
+	// 	$('#js-notice').append($msg);
+	// }
 
-	//显示错误信息
-	function ErrorMsg(result, tip) {
-		stopNotice();
-		notice_html += '<div class="install_notice">' + result + '</div>';
-		notice_html += "<span class='install_error'><img src=" + error_img + ">"+ js_lang.fail +"</span></strong>" + lf;
-		$("#js-monitor-notice").css('display', "block");
-		if (tip) {
-			notice_html += "<span class='m_l30' style='color:red'"+ js_lang.prompt + tip + "</span>" + lf;
-		}
-		$('#js-notice').append(notice_html);
-		$('#js-install-return-once').css('display', 'block');
-		return false;
-	}
+	// //显示错误信息
+	// function ErrorMsg(result, tip) {
+	// 	stopNotice();
+	// 	notice_html += '<div class="install_notice">' + result + '</div>';
+	// 	notice_html += "<span class='install_error'><img src=" + error_img + ">"+ js_lang.fail +"</span></strong>" + lf;
+	// 	$("#js-monitor-notice").css('display', "block");
+	// 	if (tip) {
+	// 		notice_html += "<span class='m_l30' style='color:red'"+ js_lang.prompt + tip + "</span>" + lf;
+	// 	}
+	// 	$('#js-notice').append(notice_html);
+	// 	$('#js-install-return-once').css('display', 'block');
+	// 	return false;
+	// }
 
     //消息提示
     app.notice = {
@@ -191,7 +181,7 @@
         },
 
         stop: function () {
-
+            $("#js-monitor-wait-please").html(js_lang.installation_aborted);
         },
 
         success: function (html) {
@@ -298,18 +288,158 @@
         }
     }
 
+    app.version = {
+	    versions: [],
+        count: 0,
+
+        //初始化
+        init: function (list) {
+            this.versions = list;
+            this.count = this.length();
+        },
+
+        //获取列表
+	    list: function () {
+            return this.versions;
+        },
+
+        //计算数量
+        length: function () {
+            return this.versions.length;
+        },
+
+        //移除第一个
+        shift: function () {
+	        this.versions.shift();
+        },
+
+        //获取第一个
+        first: function () {
+	        return this.versions[0];
+        },
+
+        //获取步数
+        setp: function () {
+            return parseInt((this.count - this.length()) / this.count * 100);
+        }
+    }
+
     //升级任务
     app.task = {
 	    //启动
-        starting: function() {
+        startingTask: function(next) {
+            console.log('starting');
+
             $('body').scrollTop(0).css('height', '100%');
             $('#js_ecjia_intro').css('display', 'none');
             $('.path').children('li').removeClass('current').eq(1).addClass('current');
 
-            progress(10);
-            upgrade();
-            return false;
-        }
+            app.progress_bar.reset();
+            app.progress_bar.update(10);
+
+            app.version.init(ver_list);
+
+            next();
+        },
+
+        //安装程序
+        upgradeTask: function(next) {
+            console.log('upgrade');
+
+            // $("#js-monitor").css('display', 'block');
+            // $('#js-monitor-notice').css('display', 'block');
+
+            app.notice.open();
+
+            // app.upgrade.eachUpgrading(ver_list, upgrade_post);
+
+            // callback(ver);
+            // next();
+            app.task.upgradeSubTask(next);
+        },
+
+        upgradeSubTask: function(next) {
+            console.log('upgradeSubTask');
+
+            if (app.version.length() === 0) {
+                next();
+            }
+            else {
+                let version = app.version.first();
+                let params = {
+                    v: version
+                };
+                let url = $(".ajax_upgrade_url").val();
+
+                $.post(url, params, function(result) {
+                    if (result.state === 'error') {
+                        let msg = js_lang.upgrading + version;
+                        // ErrorMsg(msg, result.message);
+                        app.notice.addSubject(msg);
+                        app.notice.addErrorMessage(result.message);
+                        return false;
+                    }
+                    else if (result.state === 'success') {
+                        // let msg = '<div class="install_notice">'+ js_lang.upgrading + version + '</div>';
+                        let msg = js_lang.upgrading + version;
+                        // SuccessMsg(msg);
+                        app.notice.addSubject(msg);
+                        app.notice.addSuccessMessage();
+
+                        // ver_list.shift();
+                        app.version.shift();
+
+                        // progress_step = ;
+                        // progress(progress_step);
+                        app.progress_bar.update(app.version.setp());
+                        // each_upgrade(ver_list, upgrade_post);
+                        app.task.upgradeSubTask(next);
+                    }
+                    else {
+                        let msg = js_lang.upgrading + version;
+                        // ErrorMsg(msg, 0);
+                        app.notice.addSubject(msg);
+                        return false;
+                    }
+                });
+            }
+        },
+
+        upgradeFinishTask: function (next) {
+            console.log('upgradeFinishTask');
+
+            // let url = $('input[name="done"]').val();
+            // window.setTimeout(function() {
+            //     location.href = url;
+            // }, 1500);
+
+            next();
+        },
+
+        // upgrade_post: function (version) {
+        // var params = "v=" + version;
+        // var url = $(".ajax_upgrade_url").val();
+        //
+        // $.post(url, params, function(result) {
+        //     if (result.state == 'error') {
+        //         var msg = js_lang.upgrading + version;
+        //         ErrorMsg(msg, result.message);
+        //         return false;
+        //     }
+        //     if (result.state == 'success') {
+        //         var msg = '<div class="install_notice">'+ js_lang.upgrading + version + '</div>';
+        //         SuccessMsg(msg);
+        //         ver_list.shift();
+        //         progress_step = parseInt((count - ver_list.length) / count * 100);
+        //         progress(progress_step);
+        //         each_upgrade(ver_list, upgrade_post);
+        //     }
+        //     if (typeof(result.state) == 'undefined') {
+        //         var msg = js_lang.upgrading + version;
+        //         ErrorMsg(msg, 0);
+        //     }
+        // });
+    // }
     }
 
 })(ecjia.front, jQuery);
