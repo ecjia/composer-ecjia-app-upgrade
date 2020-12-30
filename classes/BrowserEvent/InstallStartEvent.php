@@ -5,13 +5,14 @@ namespace Ecjia\App\Upgrade\BrowserEvent;
 
 
 use Ecjia\Component\BrowserEvent\BrowserEventInterface;
+use RC_Script;
 
 class InstallStartEvent implements BrowserEventInterface
 {
 
     public function __construct()
     {
-
+        RC_Script::enqueue_script('smoke');
     }
 
     public function __invoke()
