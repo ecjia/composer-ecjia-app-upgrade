@@ -408,10 +408,10 @@
         upgradeFinishTask: function (next) {
             console.log('upgradeFinishTask');
 
-            // let url = $('input[name="done"]').val();
-            // window.setTimeout(function() {
-            //     location.href = url;
-            // }, 1500);
+            let url = $('input[name="done"]').val();
+            window.setTimeout(function() {
+                location.href = url;
+            }, 2000);
 
             next();
         },
