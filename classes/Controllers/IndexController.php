@@ -53,11 +53,8 @@ use Ecjia\Component\BrowserEvent\PageEventManager;
 use Ecjia\Component\Version\VersionUtility;
 use RC_Uri;
 use RC_App;
-use RC_Package;
-use RC_Event;
 use Ecjia_VersionManager;
 use ecjia;
-use PDOException;
 
 class IndexController extends BaseControllerAbstract
 {
