@@ -3,7 +3,7 @@
 
 {block name="footer"}
 <script type="text/javascript">
-    ecjia.front.upgrade.init();
+
 </script>
 {/block}
 
@@ -37,7 +37,9 @@
                             <div class="span8 old_version" data-url="{$ajax_change_files}">
                                 <!-- {foreach from=$version_list item=ver} -->
                                 <div>
-                                    <h5>{$ver}</h5><span></span><i class="fontello-icon-angle-double-down" data-ver="{$ver}"></i>
+                                    <h5>{$ver}</h5>
+                                    <span></span>
+                                    <i class="fontello-icon-angle-double-down old_version_item" data-ver="{$ver}"></i>
                                 </div>
                                 <!-- {/foreach} -->
                                 <p>注：升级时遇到问题，可查看升级帮助文档说明（<a href="https://ecjia.com/wiki/%E5%88%86%E7%B1%BB:ECJiaWiki:Version" target="_blank">ECJia到家版本历史</a>）。</p>{/t}
