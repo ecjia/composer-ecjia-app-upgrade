@@ -113,37 +113,34 @@ class IndexController extends BaseControllerAbstract
 
     public function ajax_change_files()
     {
-        $version = trim($_POST['v']);
-        if (empty($version) || $version == 'undefined') {
-            return $this->showmessage('error', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, array('data' => ''));
+        try {
+            $version = trim($_POST['v']);
+            if (empty($version) || $version == 'undefined') {
+                return $this->showmessage('error', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, array('data' => ''));
+            }
+            // 拿到当前升级版本对象
+            $v = Ecjia_VersionManager::version($version);
+
+            // 获取变动文件
+            $readme = $v->getReadme();
+            $readme = empty($readme) ? __('无', 'upgrade') : $readme;
+
+            return $this->showmessage('ok', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('readme' => $readme));
+        } catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::DATATYPE_JSON | ecjia::MSGSTAT_ERROR);
+        } catch (\Error $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::DATATYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
-        // 拿到当前升级版本对象
-        $v = Ecjia_VersionManager::version($version);
-
-        // 获取变动文件
-        $readme = $v->getReadme();
-        $readme = empty($readme) ? __('无', 'upgrade') : $readme;
-
-        return $this->showmessage('ok', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('readme' => $readme));
     }
 
     public function ajax_upgrade()
     {
-        $version = $_POST['v'];
-        if (empty($version)) {
-            return $this->showmessage(__('版本号错误', 'upgrade'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        }
-
-//        RC_Event::listen('upgrade.after', function ($ver, $result) use ($version) {
-//
-//            if (is_ecjia_error($result)) {
-//                return false;
-//            }
-//
-//            UpgradeUtility::updateEcjiaVersion($version);
-//        });
-
         try {
+            $version = $_POST['v'];
+            if (empty($version)) {
+                return $this->showmessage(__('版本号错误', 'upgrade'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
             // 升级执行
             $rs = Ecjia_VersionManager::version($version)->upgrade();
             if (is_ecjia_error($rs)) {
@@ -151,8 +148,10 @@ class IndexController extends BaseControllerAbstract
             } else {
                 return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
             }
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             return $this->showmessage($e->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        } catch (\Error $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::DATATYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
     }
 

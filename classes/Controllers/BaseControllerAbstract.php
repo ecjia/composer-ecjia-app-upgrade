@@ -83,7 +83,7 @@ abstract class BaseControllerAbstract extends SimpleController
         RC_Script::enqueue_script('smoke');
         RC_Script::enqueue_script('jquery-cookie');
 
-        RC_Script::enqueue_script('ecjia-upgrade', RC_App::apps_url('statics/front/js/install.js', $this->__FILE__), array('ecjia-front'), false, true);
+        RC_Script::enqueue_script('ecjia-upgrade', RC_App::apps_url('statics/front/js/upgrade.js', $this->__FILE__), array('ecjia-front'), false, true);
         RC_Script::localize_script('ecjia-upgrade', 'js_lang', config('app-installer::jslang.upgrade_page'));
     }
 
