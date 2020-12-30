@@ -150,7 +150,7 @@ class IndexController extends BaseControllerAbstract
             if (is_ecjia_error($rs)) {
                 return $this->showmessage($rs->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             } else {
-                return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+                return $this->showmessage(__('升级成功', 'upgrade'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
             }
         } catch (\Exception $e) {
             return $this->showmessage($e->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);

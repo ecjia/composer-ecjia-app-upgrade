@@ -38,7 +38,9 @@ class InstallStartEvent implements BrowserEventInterface
         }
         
         let middleware = ecjia.middleware();
-        middleware.use(ecjia.front.task.starting);
+        middleware.use(ecjia.front.task.startingTask);
+        middleware.use(ecjia.front.task.upgradeTask);
+        middleware.use(ecjia.front.task.upgradeFinishTask);
         middleware.handleRequest();
     });
 })();
