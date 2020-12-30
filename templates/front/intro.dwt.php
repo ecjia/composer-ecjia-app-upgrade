@@ -53,7 +53,7 @@
 					    <input type="hidden" name="correct_img" value="{$correct_img}" />
 	                    <input type="hidden" name="error_img" value="{$error_img}" />
 	                    <input type="hidden" name="done" value="{RC_Uri::url('upgrade/index/finish')}" />
-						<input type="button" class="btn primary configuration_system_btn" {if $disable} disabled="disabled" {/if}value="{t domain="upgrade"}下一步：开始升级{/t}&raquo;" onclick="return ecjia.front.upgrade.start();" />
+						<input type="button" id="ecjia_upgrade" class="btn primary configuration_system_btn" {if $disable} disabled="disabled" {/if}value="{t domain="upgrade"}下一步：开始升级{/t}&raquo;" />
 					</form>
 					<div class="ecjia-install-body">
 						<div id="js-monitor">
